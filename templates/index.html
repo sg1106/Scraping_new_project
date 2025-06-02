@@ -1,0 +1,289 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; color: #333;">
+    <div style="max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h1 style="text-align: center; color: #2c3e50;">Fake News Detector</h1>
+        <p style="text-align: center; color: #7f8c8d;">Enter a news headline to check if it's real or fake, or scrape BBC News articles.</p>
+        
+        
+        <div style="margin-bottom: 20px;">
+            <form method="POST" style="display: flex; flex-direction: column; gap: 10px;">
+                <textarea name="input_text" placeholder="Enter a news headline..." style="width: 100%; height: 100px; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; resize: vertical;">{{ input_text }}</textarea>
+                <button type="submit" style="padding: 10px; background-color: #3498db; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; transition: background-color 0.2s;">Check News</button>
+            </form>
+        </div>
+        
+        
+        <form method="POST" style="margin-bottom: 20px;">
+            <button type="submit" name="scrape" style="padding: 10px; background-color: #2ecc71; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; transition: background-color 0.2s;">Scrape BBC News</button>
+        </form>
+        
+       
+        {% if prediction %}
+        <div style="padding: 15px; background-color: {% if prediction == 'Real' %}#e8f5e9{% else %}#ffebee{% endif %}; border-radius: 4px; margin-bottom: 20px;">
+            <h3 style="margin: 0 0 10px;">Result:</h3>
+            <p style="margin: 0;"><strong>Headline:</strong> {{ input_text }}</p>
+            <p style="margin: 0;"><strong>Prediction:</strong> {{ prediction }}</p>
+        </div>
+        {% endif %}
+        
+        
+        {% if scraped_articles %}
+        <h3 style="margin: 0 0 10px;">Scraped BBC News Articles:</h3>
+        <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 4px; padding: 15px; background-color: #fafafa;">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for article in scraped_articles %}
+                <li style="padding: 12px; margin-bottom: 8px; background-color: #ffffff; border-radius: 4px; font-size: 14px;">
+                    <strong>Article:</strong> {{ article }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector</title>
+</head>
+<body>
+    <div style="
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        min-height: 100vh;
+    ">
+        <h1 style="
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        ">Fake News Detector</h1>
+        
+        <form method="POST" action="/predict" style="
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        ">
+            <div style="
+                margin-bottom: 20px;
+            ">
+                <label for="headline" style="
+                    display: block;
+                    font-size: 1.1em;
+                    color: #333;
+                    margin-bottom: 10px;
+                ">Enter a News Headline:</label>
+                <input type="text" id="headline" name="headline" placeholder="Enter a news headline" style="
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 1em;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    box-sizing: border-box;
+                ">
+            </div>
+            <div style="
+                text-align: center;
+            ">
+                <button type="submit" name="predict" style="
+                    padding: 10px 20px;
+                    font-size: 1em;
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    margin-right: 10px;
+                ">Predict</button>
+                <button type="submit" name="scrape_bbc" value="scrape" style="
+                    padding: 10px 20px;
+                    font-size: 1em;
+                    background-color: #28a745;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                ">Scrape BBC News</button>
+            </div>
+        </form>
+
+        {% if results %}
+        <div style="
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        ">
+            <h2 style="
+                color: #333;
+                margin-bottom: 20px;
+                font-size: 1.8em;
+            ">Results</h2>
+            {% for result in results %}
+            <div style="
+                padding: 15px;
+                border-bottom: 1px solid #eee;
+            ">
+                <p style="
+                    margin: 0;
+                    font-size: 1.1em;
+                    color: #333;
+                "><strong>Headline:</strong> {{ result.headline }}</p>
+                {% if result.prediction is defined %}
+                <p style="
+                    margin: 5px 0 0;
+                    font-size: 1em;
+                    color: {% if result.prediction == 'Real' %}#28a745{% elif result.prediction == 'Fake' %}#dc3545{% else %}#666{% endif %};
+                "><strong>Prediction:</strong> {{ result.prediction }}</p>
+                
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fake News Detector</title>
+</head>
+<body>
+    <div style="
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        min-height: 100vh;
+    ">
+        <h1 style="
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        ">Fake News Detector</h1>
+        
+        <form method="POST" action="/predict" style="
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        ">
+            <div style="
+                margin-bottom: 20px;
+            ">
+                <label for="headline" style="
+                    display: block;
+                    font-size: 1.1em;
+                    color: #333;
+                    margin-bottom: 10px;
+                ">Enter a News Headline:</label>
+                <input type="text" id="headline" name="headline" placeholder="Enter a news headline" style="
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 1em;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    box-sizing: border-box;
+                " />
+            </div>
+            <div style="
+                text-align: center;
+            ">
+                <button type="submit" name="predict" style="
+                    padding: 10px 20px;
+                    font-size: 1em;
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    margin-right: 10px;
+                ">Predict</button>
+                <button type="submit" name="scrape_bbc" value="scrape" style="
+                    padding: 10px 20px;
+                    font-size: 1em;
+                    background-color: #28a745;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                ">Scrape BBC News</button>
+            </div>
+        </form>
+
+        {% if results %}
+        <div style="
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        ">
+            <h2 style="
+                color: #333;
+                margin-bottom: 20px;
+                font-size: 1.8em;
+            ">Results</h2>
+            {% for result in results %}
+            <div style="
+                padding: 15px;
+                border-bottom: 1px solid #eee;
+            ">
+                <p style="
+                    margin: 0;
+                    font-size: 1.1em;
+                    color: #333;
+                "><strong>Headline:</strong> {{ result.headline }}</p>
+                
+                {% if result.prediction is defined %}
+                <p style="
+                    margin: 5px 0 0;
+                    font-size: 1em;
+                    color: 
+                        {% if 'Real' in result.prediction %} #28a745
+                        {% elif 'Fake' in result.prediction %} #dc3545
+                        {% else %} #666 
+                        {% endif %};
+                ">
+                    <strong>Prediction:</strong> 
+                    {% if 'Real' in result.prediction %}
+                        Real
+                        {% set start = result.prediction.find('(') %}
+                        {% if start != -1 %}
+                            {{ result.prediction[start:] }}
+                        {% endif %}
+                    {% elif 'Fake' in result.prediction %}
+                        Fake
+                    {% else %}
+                        {{ result.prediction }}
+                    {% endif %}
+                </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+Flask
+requests
+beautifulsoup4
+python-dotenv
+google-generativeai
+nltk
+sentence-transformers
+scikit-learn
+numpy
